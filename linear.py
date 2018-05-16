@@ -2,7 +2,6 @@ import torch
 import math
 from torch import FloatTensor as Tensor
 from torch import LongTensor as TensorLong
-#from parameter import Parameter
 import numpy as np
 from module import Module
 
@@ -24,14 +23,14 @@ class Linear(Module):
         if self.bias is not None:
             self.bias.uniform_(-stdv, stdv)
 
-    def forward(self, input, weight, bias):
-
+    def forward(self, input):
         if input.dim() == 2 and bias is not None:
-            # fused op is marginally faster
-            return torch.addmm(bias, input, weight.t())
-        # mv for 1D vector
-        output = torch.mv(weight, input)
+            return torch.addmm(self.bias, input, self.weight.t())
 
-        if bias is not None:
-            output += bias
+        # mv for 1D vector
+        output = torch.mv(self.weight, input)
+
+        if self.bias is not None:
+            output += self.bias
         return output
+        
