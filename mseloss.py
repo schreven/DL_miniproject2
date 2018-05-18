@@ -8,10 +8,13 @@ from module import Module
 class MSELoss(Module):
     def __init__(self):
         # TODO remove this
-        self.not = []
+        self.test = []
 
-    def forward(self, input, target):
+    def forward(self, v, t):
         return (v - t).pow(2).sum()
 
-    def dloss(self, input, target):
+    def backward(self, v, t):
         return 2 * (v - t)
+
+    def parameters(self):
+        return []

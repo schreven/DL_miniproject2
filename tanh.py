@@ -5,17 +5,22 @@ from torch import LongTensor as TensorLong
 import numpy as np
 from module import Module
 from utils import *
-import utils
 
 class Tanh(Module):
     def __init__(self):
         super(Tanh, self).__init__()
-        # TODO Probably remove
-        self.threshold = 0
-        self.value = 0
 
     def forward(self, input):
-        return tanh(input)
+        return input.tanh()
+
+    def backward(self, input):
+        return input
+
+    def update_parameters(self, eta):
+        return
+
+    def reset_gradient(self):
+        return
 
     def param(self):
         return []

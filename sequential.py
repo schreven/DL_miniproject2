@@ -20,3 +20,19 @@ class Sequential(Module):
         for mod in self.modules:
             x = mod.forward(x)
         return x
+
+    def backward(self, output):
+        x = output
+        for mod in reversed(self.modules):
+            x = mod.backward(x)
+        return x
+
+    def update_parameters(self, eta):
+        for mod in self.modules:
+            mod.update_parameters(eta)
+        return
+
+    def reset_parameters(self):
+        for mod in self.modules:
+            mod.reset_gradient()
+        return
