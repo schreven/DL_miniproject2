@@ -6,6 +6,7 @@ from torch import LongTensor as TensorLong
 from module import Module
 from utils import *
 
+# No more used
 class Network(Module):
     def __init__(self, nb_in, nb_out, nb_hidden):
         super(Network, self).__init__()
