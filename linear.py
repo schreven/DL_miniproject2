@@ -11,10 +11,12 @@ class Linear(Module):
         self.in_features = in_features
         self.out_features = out_features
         self.weight = Tensor(out_features, in_features)
+        self.dweight = Tensor(self.weight.size())
         if bias:
             self.bias = Tensor(out_features)
         else:
             self.bias = None
+        self.dbias = Tensor(self.bias.size())
         self.reset_parameters()
 
     def reset_parameters(self):
@@ -33,4 +35,3 @@ class Linear(Module):
         if self.bias is not None:
             output += self.bias
         return output
-        

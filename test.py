@@ -26,7 +26,6 @@ epsilon = 1e-6
 ann = Network(2,2,25)
 
 for k in range(0, 1):
-
     for n in range(0, nb_train_samples):
         output = ann.forward(train_input[n])
         print(output)

@@ -11,6 +11,7 @@ def relu(x):
     return out
 
 def tanh(x):
-    out = Tensor(x.size(0))
-    out = np.tanh(x)
-    return out
+    return x.tanh()
+
+def dtanh(x):
+    return 4 * (x.exp() + x.mul(-1).exp()).pow(-2)

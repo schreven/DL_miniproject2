@@ -4,6 +4,7 @@ import torch
 class Module(object):
 
     def __init__(self):
+        # TODO to be removed
         self.test = []
 
     def forward(self, *input):
