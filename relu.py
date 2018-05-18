@@ -9,12 +9,18 @@ from utils import *
 class Relu(Module):
     def __init__(self):
         super(Relu, self).__init__()
-        # TODO to probably remove
-        self.threshold = 0
-        self.value = 0
+
+    def backward(self, input):
+        return input
 
     def forward(self, input):
         return relu(input)
 
     def param(self):
         return []
+
+    def update_parameters(self, eta):
+        return
+
+    def reset_gradient(self):
+        return

@@ -17,7 +17,7 @@ class Sequential(Module):
 
     def forward(self, input):
         x = input
-        for mod in self.modules:
+        for ind, mod in enumerate(self.modules):
             x = mod.forward(x)
         return x
 

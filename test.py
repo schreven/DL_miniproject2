@@ -1,3 +1,4 @@
+
 import torch
 import math
 from torch import FloatTensor as Tensor
@@ -21,53 +22,61 @@ def generate_disc_set(N):
 train_input, train_target = generate_disc_set(N)
 test_input, test_target = generate_disc_set(N)
 
-train_input = train_input * 0.9
-test_input = test_input * 0.9
+mean, std = train_input.mean(), train_input.std()
+
+train_input.sub_(mean).div_(std)
+test_input.sub_(mean).div_(std)
 
 nb_hidden = 25
 nb_classes = 2
-
 nb_train_samples = train_input.size(0)
 
-eta = 1e-3 / nb_train_samples
+eta = 1e-1/nb_train_samples
 
 # Possibility to add Linear, Tanh and ReLU
 ann = Sequential(
-                    Linear(2,nb_hidden),
+                    Linear(train_input.size(1),nb_hidden),
                     Tanh(),
-                    Linear(nb_hidden,nb_hidden),
+                    Linear(nb_hidden,nb_classes),
                     Tanh(),
-                    Linear(nb_hidden,nb_hidden),
-                    Tanh(),
-                    Linear(nb_hidden,2),
-                    Tanh()
                 )
 MSE = MSELoss()
 
-for k in range(0, 1000):
+nb_epochs = 4000
+
+for k in range(0, nb_epochs):
 
     acc_loss = 0
     nb_train_errors = 0
 
     ann.reset_parameters()
-
+    # Training
     for n in range(0, train_input.size(0)):
         output = ann.forward(train_input[n])
         pred = output.max(0)[1][0]
 
-        if pred != train_target[n]: nb_train_errors += 1
+        if pred != train_target[n]:
+             nb_train_errors += 1
+
         acc_loss = acc_loss + MSE.forward(output, train_target[n])
-        ann.backward(MSE.backward(train_target[n],output))
+        tmp = output-train_target[n]
+        tmp[pred]=0
+        acc_loss = acc_loss + MSE.forward(tmp, Tensor(2).fill_(0))
+        ann.backward(MSE.backward(tmp,Tensor(2).fill_(0)))
+
 
     # Gradient step
     ann.update_parameters(eta)
 
     nb_test_errors = 0
 
+    # Predicting
     for n in range(0, test_input.size(0)):
         output_test = ann.forward(test_input[n])
         pred_test = output_test.max(0)[1][0]
-        if pred_test != train_target[n]: nb_test_errors += 1
+
+        if pred_test != train_target[n]:
+             nb_test_errors += 1
 
     print('{:d} acc_train_loss {:.02f} acc_train_error {:.02f}% test_error {:.02f}%'
           .format(k,

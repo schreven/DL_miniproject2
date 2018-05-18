@@ -16,5 +16,7 @@ def tanh(x):
 def dtanh(x):
     return 4 * (x.exp() + x.mul(-1).exp()).pow(-2)
 
-def dloss(v, t):
-    return 2 * (v - t)
+def drelu(x):
+    x[x <= 0] = 0
+    x[x > 0] = 1
+    return x
